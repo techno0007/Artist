@@ -1,496 +1,561 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Makeup Artist Client Manager</title>
-<style>
-  /* Basic reset */
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    font-family: Arial, sans-serif;
-    margin:0; padding:0; background:#f4f4f4; color:#333;
-  }
-  header {
-    background:#4A148C; color:#fff; padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  header h1 {
-    margin: 0;
-    font-size: 1.5rem;
-  }
-  header button {
-    background:#7B1FA2; border:none; color:#fff;
-    padding: 0.5rem 1rem; font-size: 1rem;
-    cursor:pointer; border-radius: 4px;
-  }
-  main {
-    max-width: 900px;
-    margin: 1rem auto;
-    background:#fff;
-    padding: 1rem;
-    border-radius: 6px;
-    box-shadow: 0 0 8px rgba(0,0,0,0.1);
-  }
-  section {
-    margin-bottom: 1.5rem;
-  }
-  label {
-    display: block;
-    margin-top: 0.5rem;
-  }
-  input[type=text],
-  input[type=tel],
-  input[type=number],
-  input[type=date],
-  select {
-    width: 100%;
-    padding: 0.4rem;
-    margin-top: 0.25rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  button {
-    margin-top: 1rem;
-    padding: 0.6rem 1.2rem;
-    background:#4A148C;
-    color:#fff;
-    border:none;
-    border-radius: 4px;
-    cursor:pointer;
-  }
-  button:hover {
-    background:#6A1B9A;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 0.8rem;
-  }
-  th, td {
-    border: 1px solid #ddd;
-    padding: 0.6rem;
-    text-align: left;
-  }
-  th {
-    background:#7B1FA2;
-    color:#fff;
-  }
-  .action-btn {
-    background:#8E24AA;
-    color:#fff;
-    border:none;
-    padding: 0.3rem 0.6rem;
-    margin-right: 0.3rem;
-    cursor:pointer;
-    border-radius: 3px;
-    font-size: 0.9rem;
-  }
-  .action-btn:hover {
-    background:#AA47BC;
-  }
-  #salesResult {
-    background:#eee;
-    padding: 1rem;
-    border-radius: 4px;
-    display:none;
-    max-height: 300px;
-    overflow-y: auto;
-  }
-  #printInvoice {
-    display:none;
-    position: fixed;
-    top:10%;
-    left: 50%;
-    transform: translateX(-50%);
-    background:#fff;
-    border: 2px solid #4A148C;
-    padding: 1.5rem;
-    z-index: 9999;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
-  }
-  #printInvoice button {
-    margin-top: 1rem;
-    width: 48%;
-  }
-  /* Responsive */
-  @media (max-width: 768px) {
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Roma's Makeover Management</title>
+  <!-- Bootstrap 5 for modern UI -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #f8fafc 0%, #e1bee7 100%);
+      min-height: 100vh;
+      font-size: 1rem;
+    }
     header {
-      flex-direction: column;
-      align-items: flex-start;
+      background: #8e24aa;
+      color: white;
+      padding: 24px 0 16px 0;
+      text-align: center;
+      font-size: 2rem;
+      letter-spacing: 1.5px;
+      box-shadow: 0 4px 12px rgba(142,36,170,0.10);
     }
-    main {
-      margin: 0.5rem;
-      padding: 0.8rem;
+    .main-card {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(142,36,170,0.12);
+      margin-top: 24px;
+      padding: 28px 24px;
+      animation: fadeIn 0.7s;
+      min-height: 60vh;
     }
-    button {
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .table th {
+      background: #f3e5f5;
+    }
+    .btn-gradient {
+      background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
+      color: white;
+      border: none;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-gradient:hover, .btn-gradient:focus {
+      background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
+      color: #fff;
+      transform: scale(1.05);
+    }
+    .modal-header {
+      background: #ab47bc;
+      color: white;
+    }
+    .badge-due {
+      background: #e57373;
+    }
+    .badge-paid {
+      background: #43a047;
+    }
+    .nav-btn {
+      margin: 0 7px 10px 7px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+    /* Center Add Booking Button */
+    .center-add-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 32px 0 10px 0;
+    }
+    .circle-btn {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #43a047 0%, #388e3c 100%);
+      color: #fff;
+      border: none;
+      box-shadow: 0 6px 20px rgba(67,160,71,0.15);
+      font-size: 2.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+      animation: bounce 1.5s infinite;
+    }
+    .circle-btn:focus, .circle-btn:hover {
+      outline: none;
+      box-shadow: 0 12px 32px rgba(67,160,71,0.25);
+      transform: scale(1.09);
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0);}
+      50% { transform: translateY(-10px);}
+    }
+    /* Center Add Booking Form */
+    .center-form-container {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .add-booking-form {
       width: 100%;
-      margin-top: 0.8rem;
+      max-width: 480px;
+      background: #f3e5f5;
+      border-radius: 20px;
+      padding: 40px 24px 32px 24px;
+      box-shadow: 0 4px 24px rgba(142,36,170,0.12);
+      margin: 0 auto;
+      animation: fadeIn 0.7s;
     }
-    .action-btn {
-      margin-bottom: 0.3rem;
+    .add-booking-form h2 {
+      font-size: 2.1rem;
+      margin-bottom: 28px;
+      color: #8e24aa;
+      text-align: center;
+      letter-spacing: 1px;
     }
-  }
-</style>
+    @media (max-width: 600px) {
+      .main-card { padding: 8px 2vw;}
+      .add-booking-form {
+        padding: 18px 4vw 10px 4vw;
+        max-width: 98vw;
+      }
+      .center-add-btn { margin: 24px 0 6px 0;}
+      .circle-btn { width: 52px; height: 52px; font-size: 1.4rem;}
+      header { font-size: 1.2rem; padding: 16px 0 10px 0;}
+      .add-booking-form h2 { font-size: 1.3rem;}
+      .nav-btn { font-size: 0.97rem;}
+    }
+  </style>
 </head>
 <body>
-
 <header>
-  <h1>Makeup Artist Client Manager</h1>
-  <button id="homeBtn">Home</button>
+  Roma's Makeover Management
 </header>
+<div class="container">
+  <nav class="d-flex justify-content-center my-3 flex-wrap">
+    <button class="btn btn-gradient nav-btn" id="homeBtn">Home</button>
+    <button class="btn btn-gradient nav-btn" id="clientsBtn">My Clients</button>
+    <button class="btn btn-gradient nav-btn" id="dueBtn">Due Payments</button>
+    <button class="btn btn-gradient nav-btn" id="salesBtn">Sales Inventory</button>
+    <button class="btn btn-gradient nav-btn" id="notifyBtn">Notifications</button>
+  </nav>
+  <div id="mainContent" class="main-card"></div>
+</div>
 
-<main>
-  <!-- Landing / Home Page -->
-  <section id="landingPage">
-    <button id="showAddClient">Add Client Details</button>
-    <button id="showClientsList">My Clients</button>
-    <button id="showTotalSales">Total Sales</button>
-    <button id="showUpcoming">Upcoming Bookings</button>
-  </section>
-
-  <!-- Add/Edit Client Form -->
-  <section id="clientFormSection" style="display:none;">
-    <h2 id="formTitle">Add Client Details</h2>
-    <form id="clientForm">
-      <label for="clientName">Name *</label>
-      <input type="text" id="clientName" required autocomplete="off" />
-
-      <label for="clientPhone">Phone *</label>
-      <input type="tel" id="clientPhone" required autocomplete="off" pattern="[0-9]{10}" placeholder="10 digit phone"/>
-
-      <label for="clientAddress">Address *</label>
-      <input type="text" id="clientAddress" required autocomplete="off" />
-
-      <label for="clientService">Service *</label>
-      <input type="text" id="clientService" required autocomplete="off" />
-
-      <label for="clientDate">Date *</label>
-      <input type="date" id="clientDate" required />
-
-      <label for="clientAmount">Amount (₹) *</label>
-      <input type="number" id="clientAmount" min="0" step="0.01" required />
-
-      <button type="submit">Save Client</button>
-      <button type="button" id="cancelFormBtn" style="background:#999; margin-left: 0.5rem;">Cancel</button>
+<!-- Edit Booking Modal -->
+<div class="modal fade" id="editBookingModal" tabindex="-1" aria-labelledby="editBookingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form class="modal-content" id="editBookingForm">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editBookingModalLabel">Edit Booking</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editId" />
+        <div class="mb-3">
+          <label for="editName" class="form-label">Client Name</label>
+          <input type="text" class="form-control" id="editName" required />
+        </div>
+        <div class="mb-3">
+          <label for="editAddress" class="form-label">Client Address</label>
+          <input type="text" class="form-control" id="editAddress" required />
+        </div>
+        <div class="mb-3">
+          <label for="editDate" class="form-label">Booking Date</label>
+          <input type="date" class="form-control" id="editDate" required />
+        </div>
+        <div class="mb-3">
+          <label for="editTotal" class="form-label">Total Amount (₹)</label>
+          <input type="number" class="form-control" id="editTotal" min="0" step="0.01" required />
+        </div>
+        <div class="mb-3">
+          <label for="editAdvance" class="form-label">Advance Paid (₹)</label>
+          <input type="number" class="form-control" id="editAdvance" min="0" step="0.01" required />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-gradient">Save Changes</button>
+      </div>
     </form>
-  </section>
+  </div>
+</div>
 
-  <!-- Clients List -->
-  <section id="clientsListSection" style="display:none;">
-    <h2>My Clients</h2>
-    <input type="text" id="searchClient" placeholder="Search by client name..." style="width: 100%; padding:0.5rem; margin-bottom:1rem;"/>
-    <table id="clientsTable" aria-label="Clients Table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Phone</th>
-          <th>Address</th>
-          <th>Service</th>
-          <th>Date</th>
-          <th>Amount (₹)</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Filled dynamically -->
-      </tbody>
-    </table>
-  </section>
-
-  <!-- Total Sales -->
-  <section id="totalSalesSection" style="display:none;">
-    <h2>Total Sales Summary</h2>
-    <div id="salesResult"></div>
-    <button id="closeSalesBtn" style="background:#999; margin-top:1rem;">Close</button>
-  </section>
-
-  <!-- Upcoming Bookings -->
-  <section id="upcomingSection" style="display:none;">
-    <h2>Upcoming Bookings (Next 7 Days)</h2>
-    <ul id="upcomingList"></ul>
-    <button id="closeUpcomingBtn" style="background:#999; margin-top:1rem;">Close</button>
-  </section>
-
-  <!-- Printable Invoice -->
-  <section id="printInvoice"></section>
-
-</main>
-
+<!-- Bootstrap JS (for modal) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Elements references
-  const landingPage = document.getElementById("landingPage");
-  const clientFormSection = document.getElementById("clientFormSection");
-  const clientsListSection = document.getElementById("clientsListSection");
-  const totalSalesSection = document.getElementById("totalSalesSection");
-  const upcomingSection = document.getElementById("upcomingSection");
-  const printInvoiceDiv = document.getElementById("printInvoice");
+  // --- Data Management ---
+  let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
 
-  const clientForm = document.getElementById("clientForm");
-  const clientsTableBody = document.querySelector("#clientsTable tbody");
-  const salesResult = document.getElementById("salesResult");
-  const upcomingList = document.getElementById("upcomingList");
-
-  const homeBtn = document.getElementById("homeBtn");
-  const showAddClientBtn = document.getElementById("showAddClient");
-  const showClientsListBtn = document.getElementById("showClientsList");
-  const showTotalSalesBtn = document.getElementById("showTotalSales");
-  const showUpcomingBtn = document.getElementById("showUpcoming");
-  const cancelFormBtn = document.getElementById("cancelFormBtn");
-  const closeSalesBtn = document.getElementById("closeSalesBtn");
-  const closeUpcomingBtn = document.getElementById("closeUpcomingBtn");
-  const searchClientInput = document.getElementById("searchClient");
-  const formTitle = document.getElementById("formTitle");
-
-  // State
-  let clientData = JSON.parse(localStorage.getItem("makeupClients") || "[]");
-  let editIndex = -1;
-
-  // Show/Hide Sections
-  function showSection(section) {
-    // Hide all
-    landingPage.style.display = "none";
-    clientFormSection.style.display = "none";
-    clientsListSection.style.display = "none";
-    totalSalesSection.style.display = "none";
-    upcomingSection.style.display = "none";
-    printInvoiceDiv.style.display = "none";
-
-    // Show requested
-    section.style.display = "block";
+  function generateId() {
+    return Date.now().toString() + Math.floor(Math.random() * 1000);
   }
-
-  // Save clientData to localStorage
   function saveData() {
-    localStorage.setItem("makeupClients", JSON.stringify(clientData));
+    localStorage.setItem('bookings', JSON.stringify(bookings));
   }
 
-  // Clear form fields
-  function clearForm() {
-    clientForm.reset();
-    editIndex = -1;
-    formTitle.textContent = "Add Client Details";
-  }
+  // --- Navigation ---
+  const mainContent = document.getElementById('mainContent');
+  document.getElementById('homeBtn').onclick = showHome;
+  document.getElementById('clientsBtn').onclick = showClients;
+  document.getElementById('dueBtn').onclick = showDuePayments;
+  document.getElementById('salesBtn').onclick = showSales;
+  document.getElementById('notifyBtn').onclick = checkNotifications;
 
-  // Render clients table (with optional filter text)
-  function renderClientsTable(filterText = "") {
-    clientsTableBody.innerHTML = "";
-    const filtered = clientData.filter(c =>
-      c.Name.toLowerCase().includes(filterText.toLowerCase())
-    );
-
-    if(filtered.length === 0) {
-      clientsTableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No clients found.</td></tr>`;
-      return;
-    }
-
-    filtered.forEach((c, i) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${c.Name}</td>
-        <td>${c.Phone}</td>
-        <td>${c.Address}</td>
-        <td>${c.Service}</td>
-        <td>${c.Date}</td>
-        <td>₹${parseFloat(c.Amount).toFixed(2)}</td>
-        <td>
-          <button class="action-btn" onclick="editClient(${i})" aria-label="Edit ${c.Name}">Edit</button>
-          <button class="action-btn" onclick="deleteClient(${i})" aria-label="Delete ${c.Name}">Delete</button>
-          <button class="action-btn" onclick="printInvoice(${i})" aria-label="Print invoice for ${c.Name}">Invoice</button>
-        </td>
-      `;
-      clientsTableBody.appendChild(tr);
-    });
-  }
-
-  // Add or update client from form
-  clientForm.addEventListener("submit", function(e){
-    e.preventDefault();
-
-    const Name = document.getElementById("clientName").value.trim();
-    const Phone = document.getElementById("clientPhone").value.trim();
-    const Address = document.getElementById("clientAddress").value.trim();
-    const Service = document.getElementById("clientService").value.trim();
-    const DateVal = document.getElementById("clientDate").value;
-    const Amount = parseFloat(document.getElementById("clientAmount").value);
-
-    if (!Name || !Phone || !Address || !Service || !DateVal || isNaN(Amount) || Amount < 0) {
-      alert("Please fill all fields correctly.");
-      return;
-    }
-
-    const clientObj = { Name, Phone, Address, Service, Date: DateVal, Amount };
-
-    if(editIndex === -1) {
-      // Add new
-      clientData.push(clientObj);
-      alert("Client added successfully.");
-    } else {
-      // Update existing
-      clientData[editIndex] = clientObj;
-      alert("Client updated successfully.");
-    }
-
-    saveData();
-    clearForm();
-    showSection(landingPage);
-  });
-
-  // Edit client
-  window.editClient = function(index) {
-    const c = clientData[index];
-    document.getElementById("clientName").value = c.Name;
-    document.getElementById("clientPhone").value = c.Phone;
-    document.getElementById("clientAddress").value = c.Address;
-    document.getElementById("clientService").value = c.Service;
-    document.getElementById("clientDate").value = c.Date;
-    document.getElementById("clientAmount").value = c.Amount;
-    editIndex = index;
-    formTitle.textContent = "Edit Client Details";
-    showSection(clientFormSection);
-  };
-
-  // Delete client
-  window.deleteClient = function(index) {
-    if(confirm(`Are you sure you want to delete client "${clientData[index].Name}"?`)) {
-      clientData.splice(index,1);
-      saveData();
-      renderClientsTable(searchClientInput.value);
-    }
-  };
-
-  // Print invoice
-  window.printInvoice = function(index) {
-    const c = clientData[index];
-    const html = `
-      <h2>Invoice</h2>
-      <p><strong>Client Name:</strong> ${c.Name}</p>
-      <p><strong>Phone:</strong> ${c.Phone}</p>
-      <p><strong>Address:</strong> ${c.Address}</p>
-      <p><strong>Service:</strong> ${c.Service}</p>
-      <p><strong>Date:</strong> ${c.Date}</p>
-      <p><strong>Amount:</strong> ₹${parseFloat(c.Amount).toFixed(2)}</p>
-      <hr/>
-      <p><em>Thank you for your business!</em></p>
-      <button onclick="window.print()">Print this invoice</button>
-      <button onclick="printInvoiceDiv.style.display='none'">Close</button>
+  // Add Booking Button (centered)
+  function renderAddBookingBtn() {
+    return `
+      <div class="center-add-btn">
+        <button class="circle-btn" id="addBookingFab" title="Add Booking">
+          <span aria-hidden="true">+</span>
+        </button>
+      </div>
     `;
-    printInvoiceDiv.innerHTML = html;
-    printInvoiceDiv.style.display = "block";
-  };
-
-  // Show total sales summary
-  function showTotalSalesSummary() {
-    if(clientData.length === 0) {
-      alert("No client data available.");
-      return;
-    }
-    let byCustomer = {};
-    let byDate = {};
-    let byMonth = {};
-
-    clientData.forEach(({Name, Date, Amount}) => {
-      // By customer
-      if(!byCustomer[Name]) byCustomer[Name] = 0;
-      byCustomer[Name] += Amount;
-
-      // By date (YYYY-MM-DD)
-      if(!byDate[Date]) byDate[Date] = 0;
-      byDate[Date] += Amount;
-
-      // By month (YYYY-MM)
-      const month = Date.slice(0,7);
-      if(!byMonth[month]) byMonth[month] = 0;
-      byMonth[month] += Amount;
-    });
-
-    let html = `<h3>By Customer</h3><ul>`;
-    for(const c in byCustomer) {
-      html += `<li>${c}: ₹${byCustomer[c].toFixed(2)}</li>`;
-    }
-    html += `</ul><h3>By Date</h3><ul>`;
-    for(const d in byDate) {
-      html += `<li>${d}: ₹${byDate[d].toFixed(2)}</li>`;
-    }
-    html += `</ul><h3>By Month</h3><ul>`;
-    for(const m in byMonth) {
-      html += `<li>${m}: ₹${byMonth[m].toFixed(2)}</li>`;
-    }
-    html += `</ul>`;
-
-    salesResult.innerHTML = html;
-    showSection(totalSalesSection);
   }
 
-  // Show upcoming bookings in next 7 days
-  function showUpcomingBookings() {
-    if(clientData.length === 0) {
-      alert("No client data available.");
-      return;
-    }
-    const today = new Date();
-    const upcoming = clientData.filter(({Date}) => {
-      const d = new Date(Date);
-      const diff = (d - today) / (1000*60*60*24);
-      return diff >= 0 && diff <= 7;
-    });
+  // --- Views ---
+  function showHome() {
+    mainContent.innerHTML = `
+      <h2 class="mb-3 text-center" style="font-weight:600;color:#8e24aa;">Welcome Roma's Makeover</h2>
+      <div class="text-center" style="font-size:1.2rem; margin-bottom:0.6em;">
+        Start your booking and manage clients easily.
+      </div>
+      ${renderAddBookingBtn()}
+    `;
+    setTimeout(() => {
+      document.getElementById('addBookingFab').onclick = showAddBooking;
+    }, 10);
+  }
 
-    upcomingList.innerHTML = "";
-    if(upcoming.length === 0) {
-      upcomingList.innerHTML = "<li>No upcoming bookings in next 7 days.</li>";
+  function showAddBooking() {
+    mainContent.innerHTML = `
+      <div class="center-form-container">
+        <form id="bookingForm" class="add-booking-form">
+          <h2>Add Booking</h2>
+          <div class="mb-4">
+            <label for="name" class="form-label">Client Name</label>
+            <input type="text" class="form-control form-control-lg" id="name" required />
+          </div>
+          <div class="mb-4">
+            <label for="address" class="form-label">Client Address</label>
+            <input type="text" class="form-control form-control-lg" id="address" required />
+          </div>
+          <div class="mb-4">
+            <label for="date" class="form-label">Booking Date</label>
+            <input type="date" class="form-control form-control-lg" id="date" required />
+          </div>
+          <div class="mb-4">
+            <label for="total" class="form-label">Total Amount (₹)</label>
+            <input type="number" class="form-control form-control-lg" id="total" min="0" step="0.01" required />
+          </div>
+          <div class="mb-4">
+            <label for="advance" class="form-label">Advance Paid (₹)</label>
+            <input type="number" class="form-control form-control-lg" id="advance" min="0" step="0.01" value="0" required />
+          </div>
+          <button type="submit" class="btn btn-success btn-lg w-100 mt-2" style="font-size:1.3rem;">Save Booking</button>
+        </form>
+      </div>
+    `;
+    document.getElementById('bookingForm').onsubmit = function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const date = document.getElementById('date').value;
+      const total = parseFloat(document.getElementById('total').value);
+      const advance = parseFloat(document.getElementById('advance').value);
+
+      if (!name || !address || !date || isNaN(total) || isNaN(advance) || total < advance) {
+        alert('Please fill in valid data. Advance cannot be more than total.');
+        return;
+      }
+      bookings.push({ id: generateId(), name, address, date, total, advance });
+      saveData();
+      alert('Booking saved!');
+      showClients();
+    };
+  }
+
+  function showClients() {
+    let html = `
+      <h2>My Clients</h2>
+      ${renderAddBookingBtn()}
+      <div class="table-responsive">
+      <table class="table table-striped align-middle mt-3">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Booking Date</th>
+            <th>Total (₹)</th>
+            <th>Advance (₹)</th>
+            <th>Due (₹)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+    if (bookings.length === 0) {
+      html += `<tr><td colspan="7" class="text-center">No bookings found</td></tr>`;
     } else {
-      upcoming.forEach(c => {
-        const li = document.createElement("li");
-        li.textContent = `${c.Name} - ${c.Service} on ${c.Date}`;
-        upcomingList.appendChild(li);
+      bookings.forEach(b => {
+        const due = b.total - b.advance;
+        html += `
+          <tr>
+            <td>${b.name}</td>
+            <td>${b.address}</td>
+            <td>${b.date}</td>
+            <td>₹${b.total.toFixed(2)}</td>
+            <td>₹${b.advance.toFixed(2)}</td>
+            <td>
+              <span class="badge ${due > 0 ? 'badge-due' : 'badge-paid'}">${due > 0 ? '₹' + due.toFixed(2) : 'Paid'}</span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-gradient me-1" onclick="printInvoice('${b.id}')">Print</button>
+              <button class="btn btn-sm btn-gradient me-1" onclick="openEditModal('${b.id}')">Edit</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteBooking('${b.id}')">Delete</button>
+            </td>
+          </tr>
+        `;
       });
     }
-    showSection(upcomingSection);
+    html += `</tbody></table></div>`;
+    mainContent.innerHTML = html;
+    setTimeout(() => {
+      document.getElementById('addBookingFab').onclick = showAddBooking;
+    }, 10);
   }
 
-  // Event Listeners for nav buttons
-  showAddClientBtn.onclick = () => {
-    clearForm();
-    showSection(clientFormSection);
-  };
-  showClientsListBtn.onclick = () => {
-    renderClientsTable();
-    showSection(clientsListSection);
-  };
-  showTotalSalesBtn.onclick = () => {
-    showTotalSalesSummary();
-  };
-  showUpcomingBtn.onclick = () => {
-    showUpcomingBookings();
-  };
-  cancelFormBtn.onclick = () => {
-    clearForm();
-    showSection(landingPage);
-  };
-  closeSalesBtn.onclick = () => {
-    showSection(landingPage);
-  };
-  closeUpcomingBtn.onclick = () => {
-    showSection(landingPage);
-  };
-  homeBtn.onclick = () => {
-    clearForm();
-    showSection(landingPage);
+  function showDuePayments() {
+    let html = `
+      <h2>Due Payments</h2>
+      ${renderAddBookingBtn()}
+      <div class="table-responsive">
+      <table class="table table-striped align-middle mt-3">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Booking Date</th>
+            <th>Total (₹)</th>
+            <th>Advance (₹)</th>
+            <th>Due (₹)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+    const dueClients = bookings.filter(b => (b.total - b.advance) > 0);
+    if (dueClients.length === 0) {
+      html += `<tr><td colspan="7" class="text-center">No clients with dues.</td></tr>`;
+    } else {
+      dueClients.forEach(b => {
+        const due = b.total - b.advance;
+        html += `
+          <tr>
+            <td>${b.name}</td>
+            <td>${b.address}</td>
+            <td>${b.date}</td>
+            <td>₹${b.total.toFixed(2)}</td>
+            <td>₹${b.advance.toFixed(2)}</td>
+            <td>
+              <span class="badge badge-due">₹${due.toFixed(2)}</span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-gradient me-1" onclick="printInvoice('${b.id}')">Print</button>
+              <button class="btn btn-sm btn-gradient me-1" onclick="openEditModal('${b.id}')">Edit</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteBooking('${b.id}')">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+    html += `</tbody></table></div>`;
+    mainContent.innerHTML = html;
+    setTimeout(() => {
+      document.getElementById('addBookingFab').onclick = showAddBooking;
+    }, 10);
+  }
+
+  function showSales() {
+    if (bookings.length === 0) {
+      mainContent.innerHTML = `<h2>Sales Inventory</h2><p>No sales data available.</p>${renderAddBookingBtn()}`;
+      setTimeout(() => {
+        document.getElementById('addBookingFab').onclick = showAddBooking;
+      }, 10);
+      return;
+    }
+    // Group sales by client
+    const salesByClient = {};
+    bookings.forEach(b => {
+      if (!salesByClient[b.name]) salesByClient[b.name] = 0;
+      salesByClient[b.name] += b.total;
+    });
+    // Group sales by date
+    const salesByDate = {};
+    bookings.forEach(b => {
+      salesByDate[b.date] = (salesByDate[b.date] || 0) + b.total;
+    });
+    // Group sales by month (YYYY-MM)
+    const salesByMonth = {};
+    bookings.forEach(b => {
+      const month = b.date.slice(0, 7);
+      salesByMonth[month] = (salesByMonth[month] || 0) + b.total;
+    });
+    let html = `<h2>Sales Inventory</h2>
+      ${renderAddBookingBtn()}
+      <div class="row">
+        <div class="col-md-4 col-12 mb-3">
+          <h5>By Client</h5>
+          <ul class="list-group mb-3">`;
+    for (const client in salesByClient) {
+      html += `<li class="list-group-item d-flex justify-content-between align-items-center">
+        ${client}
+        <span class="badge bg-primary rounded-pill">₹${salesByClient[client].toFixed(2)}</span>
+      </li>`;
+    }
+    html += `</ul></div>
+      <div class="col-md-4 col-12 mb-3">
+        <h5>By Date</h5>
+        <ul class="list-group mb-3">`;
+    Object.keys(salesByDate).sort().forEach(date => {
+      html += `<li class="list-group-item d-flex justify-content-between align-items-center">
+        ${date}
+        <span class="badge bg-success rounded-pill">₹${salesByDate[date].toFixed(2)}</span>
+      </li>`;
+    });
+    html += `</ul></div>
+      <div class="col-md-4 col-12 mb-3">
+        <h5>By Month</h5>
+        <ul class="list-group mb-3">`;
+    Object.keys(salesByMonth).sort().forEach(month => {
+      html += `<li class="list-group-item d-flex justify-content-between align-items-center">
+        ${month}
+        <span class="badge bg-warning text-dark rounded-pill">₹${salesByMonth[month].toFixed(2)}</span>
+      </li>`;
+    });
+    html += `</ul></div></div>`;
+    mainContent.innerHTML = html;
+    setTimeout(() => {
+      document.getElementById('addBookingFab').onclick = showAddBooking;
+    }, 10);
+  }
+
+  function checkNotifications() {
+    const today = new Date();
+    const upcoming = bookings.filter(b => {
+      const bDate = new Date(b.date);
+      const diff = (bDate - today) / (1000 * 60 * 60 * 24);
+      return diff >= 0 && diff <= 7;
+    });
+    if (upcoming.length === 0) {
+      alert("No upcoming bookings in next 7 days.");
+      return;
+    }
+    let message = "Upcoming bookings in next 7 days:\n";
+    upcoming.forEach(b => {
+      message += `- ${b.name} on ${b.date}\n`;
+    });
+    alert(message);
+  }
+
+  // --- Actions ---
+  window.printInvoice = function(id) {
+    const b = bookings.find(x => x.id === id);
+    if (!b) return alert('Booking not found!');
+    const due = b.total - b.advance;
+    // Open window first to avoid popup blockers
+    const printWindow = window.open('', '', 'height=600,width=500');
+    const invoiceContent = `
+      <html><head><title>Invoice - ${b.name}</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+      <style>
+        body { font-family: Arial, sans-serif; padding: 40px; }
+        .invoice-card { max-width: 400px; margin:auto; border-radius: 12px; box-shadow:0 4px 16px #ccc;}
+        .invoice-header { background: #ab47bc; color: white; padding: 16px; border-radius: 12px 12px 0 0; text-align:center;}
+        .invoice-body { padding: 24px;}
+        .invoice-label { font-weight: bold; }
+      </style>
+      </head><body>
+      <div class="invoice-card">
+        <div class="invoice-header">
+          <h2>Invoice</h2>
+        </div>
+        <div class="invoice-body">
+          <p><span class="invoice-label">Client Name:</span> ${b.name}</p>
+          <p><span class="invoice-label">Address:</span> ${b.address}</p>
+          <p><span class="invoice-label">Booking Date:</span> ${b.date}</p>
+          <p><span class="invoice-label">Total Amount:</span> ₹${b.total.toFixed(2)}</p>
+          <p><span class="invoice-label">Advance Paid:</span> ₹${b.advance.toFixed(2)}</p>
+          <p><span class="invoice-label">Due Amount:</span> ₹${due.toFixed(2)}</p>
+        </div>
+      </div>
+      <script>
+        window.onload = function() {
+          setTimeout(function() { window.print(); window.close(); }, 300);
+        }
+      <\/script>
+      </body></html>
+    `;
+    printWindow.document.open();
+    printWindow.document.write(invoiceContent);
+    printWindow.document.close();
   };
 
-  searchClientInput.addEventListener("input", () => {
-    renderClientsTable(searchClientInput.value);
-  });
+  window.deleteBooking = function(id) {
+    if (confirm('Delete this booking?')) {
+      bookings = bookings.filter(b => b.id !== id);
+      saveData();
+      showClients();
+    }
+  };
 
-  // Initial landing view
-  showSection(landingPage);
+  // --- Edit Booking Modal ---
+  let editModal = new bootstrap.Modal(document.getElementById('editBookingModal'));
+
+  window.openEditModal = function(id) {
+    const b = bookings.find(x => x.id === id);
+    if (!b) return alert('Booking not found!');
+    document.getElementById('editId').value = b.id;
+    document.getElementById('editName').value = b.name;
+    document.getElementById('editAddress').value = b.address;
+    document.getElementById('editDate').value = b.date;
+    document.getElementById('editTotal').value = b.total;
+    document.getElementById('editAdvance').value = b.advance;
+    editModal.show();
+  };
+
+  document.getElementById('editBookingForm').onsubmit = function(e) {
+    e.preventDefault();
+    const id = document.getElementById('editId').value;
+    const name = document.getElementById('editName').value.trim();
+    const address = document.getElementById('editAddress').value.trim();
+    const date = document.getElementById('editDate').value;
+    const total = parseFloat(document.getElementById('editTotal').value);
+    const advance = parseFloat(document.getElementById('editAdvance').value);
+
+    if (!name || !address || !date || isNaN(total) || isNaN(advance) || total < advance) {
+      alert('Please fill in valid data. Advance cannot be more than total.');
+      return;
+    }
+    // Update booking
+    const idx = bookings.findIndex(b => b.id === id);
+    if (idx !== -1) {
+      bookings[idx] = { id, name, address, date, total, advance };
+      saveData();
+      editModal.hide();
+      showClients();
+    }
+  };
+
+  // --- Initialize ---
+  showHome();
 </script>
-
 </body>
 </html>
